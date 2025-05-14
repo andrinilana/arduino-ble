@@ -4,8 +4,8 @@
 #include <BLE2902.h>
 
 // UUIDs arbitraires (tu peux les changer)
-#define SERVICE_UUID "12345678-1234-1234-1234-123456789abc"
-#define CHARACTERISTIC_UUID "abcd1234-ab12-cd34-ef56-1234567890ab"
+#define SERVICE_UUID "b3b83c9e-8c0b-4cb2-b2f5-3d204a2f2f9a"
+#define CHARACTERISTIC_UUID "a0c17ef1-f043-4c41-8c89-1a2b3e6f7d52"
 
 BLECharacteristic *pCharacteristic;
 
@@ -37,9 +37,9 @@ void setup() {
 
 void loop() {
   static unsigned long lastSend = 0;
-  if (millis() - lastSend > 1000) {
-    String msg = "temperature=90";
+  if (millis() - lastSend > 1000) {    
     lastSend = millis();
+    String msg = "t=90;f=45";
     pCharacteristic->setValue(msg);
     pCharacteristic->notify();  // Envoie via notification BLE
     Serial.println("Sent: " + msg);
