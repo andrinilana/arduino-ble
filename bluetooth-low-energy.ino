@@ -9,6 +9,17 @@
 
 BLECharacteristic *pCharacteristic;
 
+class MyCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic *pCharacteristic) {
+    String rxValue = pCharacteristic->getValue().c_str();  // Convert to Arduino String
+
+    if (rxValue.length() > 0) {
+      Serial.print("Received: ");
+      Serial.println(rxValue);
+    }
+  }
+};
+
 void setup() {
   Serial.begin(115200);
 
@@ -20,7 +31,14 @@ void setup() {
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
   // Crée une caractéristique BLE
-  pCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
+  pCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_UUID, 
+    BLECharacteristic::PROPERTY_WRITE | 
+    BLECharacteristic::PROPERTY_READ | 
+    BLECharacteristic::PROPERTY_NOTIFY
+  );
+
+  pCharacteristic->setCallbacks(new MyCallbacks());
 
   // Ajoute un descripteur pour les notifications
   pCharacteristic->addDescriptor(new BLE2902());
